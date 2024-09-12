@@ -1,0 +1,5 @@
+#!/bin/bash
+read -p "请输入第一个数字: " NUM1
+read -p "请输入第二个数字: " NUM2
+SUM=$((NUM1 + NUM2))
+echo "它们的和是: $SUM"
