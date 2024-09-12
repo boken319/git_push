@@ -1,0 +1,7 @@
+#!/bin/bash
+read -p "请输入您的名字: " NAME
+if [ "$NAME" == "root" ]; then
+    echo "您好，管理员！"
+else
+    echo "您好，$NAME！"
+fi
