@@ -1,0 +1,4 @@
+Hello, world! This is a simple text file.
+We are going to use this file to test the word_frequency function.
+The function will count how many times each word appears in the file.
+It's a fun exercise to see how Python handles text data.
