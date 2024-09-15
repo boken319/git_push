@@ -1,0 +1,621 @@
+\documentclass[a4paper, 12pt]{article}
+% A4纸张，article类型
+\usepackage[UTF8]{ctex}
+%以此支持中文
+\usepackage{graphicx}
+%以此插入图片
+\usepackage{url}
+%支持使用 \url命令
+\usepackage{float}
+\usepackage{xcolor}
+\usepackage{hyperref} % 加载hyperref宏包 
+\usepackage{listings}  % 代码高亮包
+\usepackage{amsmath}
+\usepackage{verbatim}
+
+\begin{document}
+  \title{第三节课实验报告}
+  \author{王书一 \\ 23020007119}
+  \date{September 9, 2024}
+  \maketitle
+
+ \pagenumbering{arabic}
+ \tableofcontents
+ \newpage
+ \pagenumbering{arabic}
+ %目录
+
+  
+  \section{实验目的}
+  掌握命令行环境工具的使用，特别是运行、终止等工具。
+学习并应用Python进行基础数据处理和可视化。
+  
+\section{实验环境}
+\begin{itemize}
+    \item 操作系统：Ubuntu 20.04
+   \item 编程语言：Python 3.12.0
+\end{itemize}
+
+\section{命令行环境}
+
+\subsection{暂停和后台执行进程}
+
+
+\begin{itemize}
+    \item \texttt{Ctrl-Z}       让 shell 发送 SIGTSTP 信号，SIGTSTP 是 Terminal Stop 的缩写（即 terminal 版本的 SIGSTOP）
+    \item \texttt{fg}        恢复暂停的工作,在前台继续
+    \item \texttt{bg}        恢复暂停的工作,在后台继续
+    \item \texttt{jobs}     列出当前终端会话中尚未完成的全部任务
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{3.png}
+  \caption{暂停和后台执行进程}
+   \end{figure}
+
+\subsection{查找PID并执行命令}  
+
+\begin{itemize}
+  \item \texttt{pgrep}    查找当前运行的进程的命令行工具。它通过进程的名称或其他属性来搜索进程，并返回这些进程的进程ID（PID）。-l 选项告诉 pgrep 在输出中不仅包含进程的 PID，还要包含进程的完整命令行。
+   \item \texttt{\&}    命令中的 \& 后缀可以让命令在直接在后台运行
+  \item \texttt{kill [选项] 进程ID}    kill命令用于终止指定的进程（terminate a process）的运行
+  \item \texttt{kill -STOP 进程ID}    暂停进程
+ \item \texttt{kill -CONT 进程ID}    恢复进程
+  \end{itemize}
+
+SIGTERM (15)：
+
+默认信号，请求进程终止。进程可以捕获此信号并进行清理操作。
+命令：kill PID 或 kill -15 PID
+
+SIGKILL (9)：
+
+强制终止进程，进程无法捕获或忽略此信号。
+命令：kill -9 PID
+  
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{3.png}
+  \caption{查找PID并执行命令}
+   \end{figure}
+
+\subsection{别名}  
+
+大多数 shell 都支持设置别名。shell 的别名相当于一个长命令的缩写，shell 会自动将其替换成原本的命令。
+
+\begin{lstlisting}
+ls -lAh --time=atime --color=auto
+# 创建常用命令的缩写
+alias ll="ls -lh"
+alias gs="git status"
+alias v="vim"
+# 手误打错命令也没关系
+alias sl=ls
+# 重新定义一些命令行的默认行为
+alias mv="mv -i"           # -i prompts before overwrite
+alias mkdir="mkdir -p"     # -p make parent dirs as needed
+alias df="df -h"           # -h prints human readable format
+# 获取别名的定义
+alias ll
+# 会打印 ll='ls -lh'
+\end{lstlisting}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{2.png}
+  \caption{别名的应用}
+   \end{figure}
+
+问题1：创建一个 dc 别名，它的功能是当我们错误的将 cd 输入为 dc 时也能正确执行。
+\begin{lstlisting}
+alias cd="dc"
+\end{lstlisting}
+注意：等号两边不可以加空格
+
+如果需要保存此别名需要对文件进行更改
+\begin{lstlisting}
+步骤 1：编辑 .bashrc 或 .bash_profile 文件  nano ~/.bashrc
+步骤 2：添加别名   在 .bashrc 文件中添加以下行来创建 dc 别名：
+alias dc='cd'
+步骤 3：重新加载 .bashrc 文件  source ~/.bashrc
+步骤4：验证别名  可以尝试输入 dc 来验证别名是否生效：
+dc /path/to/directory
+\end{lstlisting}
+
+\section{Python入门基础}
+\subsection{计算器代码}  
+写一个简单的命令行计算器，用户可以输入两个数字并选择一个操作（加、减、乘、除），然后程序会输出计算结果。
+
+
+\begin{lstlisting}
+编写思路
+用户交互：通过 input 函数获取用户输入的两个数字和操作符。
+条件判断：使用 if-elif-else 结构来判断用户选择的操作符，
+并执行相应的计算。
+错误处理：在除法操作中，检查除数是否为零，避免程序崩溃。
+输出结果：使用 print 函数输出计算结果。
+\end{lstlisting}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{4.png}
+  \caption{计算器代码}
+   \end{figure}
+
+   \begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{5.png}
+  \caption{计算器运行结果}
+   \end{figure}
+升级方案：
+循环执行：允许用户多次进行计算，而不是只执行一次。
+当用户输入“q”时退出
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{6.png}
+  \caption{计算器代码}
+   \end{figure}
+   
+  \subsection{猜数字小游戏}  
+  写一个猜数字游戏，使用Python编写。游戏的目的是让玩家猜测一个由程序随机生成的位于1到100（包括1和100）之间的整数。
+\begin{lstlisting}
+导入random模块：首先，通过import random语句导入了Python的random模块，
+这个模块提供了生成随机数的功能。
+定义guess_number函数：接着，定义一个名为guess_number的函数，
+这个函数不接受任何参数，并且会执行猜数字游戏的逻辑。
+生成随机数：在函数内部，首先使用random.randint(1, 100)生成一个1到100
+之间的随机整数，并将其赋值给变量number。这个随机数就是玩家需要猜测的数字。
+初始化尝试次数：然后，初始化一个名为attempts的变量，并将其设置为0。
+这个变量用于记录玩家猜测的次数。
+无限循环：使用while True创建一个无限循环，这个循环会一直执行，
+直到玩家猜对数字为止。
+获取玩家猜测：在循环内部，首先通过input函数获取玩家的输入，
+并使用int函数将其转换为整数，赋值给变量guess。
+判断猜测结果：
+调用函数：最后，通过guess_number()调用这个函数，启动游戏。
+\end{lstlisting}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{7.png}
+  \caption{猜数字代码}
+   \end{figure}
+   
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{8.png}
+  \caption{运行结果}
+   \end{figure}   
+   
+\subsection{文件处理}  
+这段代码定义了一个名为的函数，它接受一个文件路径作为参数，并计算并打印出该文件中每个单词出现的频率
+
+读取并处理文本：
+file.read() 读取文件的全部内容。
+.lower() 将文本转换为小写，以确保单词的频率统计不区分大小写（例如，"Hello" 和 "hello" 会被视为同一个单词）。
+.split() 将文本分割成一个单词列表。默认情况下，split() 方法按空白字符（如空格、换行符等）分割字符串。
+计算单词频率：使用 Counter(text) 创建一个 Counter 对象，该对象会统计列表中每个元素（这里是单词）的出现次数。
+打印单词频率：遍历 Counter 对象的项（单词及其频率），并使用 print(f"{word}: {freq}") 打印每个单词及其对应的频率
+
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{9.png}
+  \caption{代码}
+   \end{figure}   
+
+   \begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{10.png}
+  \caption{运行结果}
+   \end{figure}   
+
+\subsection{写一个备忘录}  
+定义一个简单的文本备忘录程序，它允许用户添加、查看、删除备忘，并提供了退出程序的功能。程序使用一个列表 notes 来存储所有的备忘。
+
+代码解释：
+初始化备忘列表：程序开始时，创建一个空列表 notes 来存储备忘。
+主循环：程序进入一个无限循环，直到用户选择退出（选项4）。
+显示操作选项：向用户显示四个操作选项：添加备忘、查看备忘、删除备忘、退出。
+用户输入处理：
+添加备忘（选项1）：接收用户输入的备忘内容，并将其添加到 notes 列表中。
+查看备忘（选项2）：遍历 notes 列表，并打印出所有备忘及其编号（编号从1开始，但列表索引从0开始，因此打印时需要将索引加1）。
+删除备忘（选项3）：接收用户输入的备忘编号，将其转换为整数并减1以匹配列表索引，然后检查该索引是否有效。如果有效，则从 notes 列表中删除对应的备忘。
+退出（选项4）：退出程序。
+错误处理：如果用户输入了无效的操作选项，程序会提示用户重新输入。
+
+ 
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{11.png}
+  \caption{代码}
+   \end{figure}  
+
+    \begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{12.png}
+  \caption{运行结果}
+   \end{figure}  
+    \begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{13.png}
+  \caption{运行结果}
+   \end{figure}   
+   
+\subsection{实现一个剪刀石头布游戏}  
+
+总体思路
+定义游戏选项：首先，定义一个包含所有可能游戏选项（石头、剪刀、布）的列表。
+游戏循环：使用一个无限循环（while True）来允许用户连续玩游戏，直到他们选择退出。
+计算机选择：在每次循环中，使用random.choice()函数从游戏选项列表中随机选择一个作为计算机的选择。
+用户输入：提示用户输入他们的选择，并允许他们输入“退出”来结束游戏。
+输入验证：检查用户的输入是否有效（即是否是游戏选项之一或“退出”）。如果输入无效，则提示用户重新输入，并继续当前循环。
+比较结果：如果输入有效，则比较用户的选择和计算机的选择，以确定胜负或平局。
+输出结果：根据比较结果，打印出相应的消息（如“你赢了！”、“你输了！”或“平局！”）。
+退出条件：如果用户输入“退出”，则打印结束消息并退出循环，从而结束游戏。
+
+详细步骤
+初始化：
+创建一个包含“石头”、“剪刀”和“布”的列表choices。
+导入random模块以使用random.choice()函数。
+游戏循环：
+使用while True创建一个无限循环。
+计算机选择：
+在每次循环开始时，使用random.choice(choices)随机选择一个选项作为计算机的选择。
+用户输入：
+提示用户输入他们的选择，并允许他们输入“退出”来结束游戏。
+使用input()函数获取用户的输入。
+输入验证：
+检查用户的输入是否在choices列表中或是否等于“退出”（不区分大小写）。
+如果输入无效，打印错误消息并使用continue跳过当前循环的剩余部分，回到循环的开始。
+比较结果：
+如果输入有效，则使用一系列的if-elif-else语句来比较用户的选择和计算机的选择。
+根据比较结果，打印出相应的胜负或平局消息。
+输出结果：
+使用print()函数打印出比较结果的消息。
+退出条件：
+如果用户输入“退出”，则打印结束消息并使用break退出循环，从而结束游戏。
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{14.png}
+  \caption{代码}
+   \end{figure}  
+
+    \begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{15.png}
+  \caption{运行结果}
+   \end{figure}  
+
+解决方案：
+该代码仍与常规游戏平局继续循环，判断输赢后结束不符，故进行修改
+\begin{lstlisting}
+   # 比较用户和计算机的选择  
+        if user_choice == computer_choice:  
+            print(f"平局！都选择了{user_choice}，请继续...")  
+        elif (user_choice == '石头' and computer_choice == '剪刀') or \  
+             (user_choice == '剪刀' and computer_choice == '布') or \  
+             (user_choice == '布' and computer_choice == '石头'):  
+            print(f"你赢了！{user_choice}打败了{computer_choice}，
+            游戏结束。")  
+            break  # 如果用户赢了，则退出循环结束游戏  
+        else:  
+            print(f"你输了！{computer_choice}打败了{user_choice}，
+            游戏结束。")  
+            break  # 如果用户输了，也退出循环结束游戏 
+\end{lstlisting} 
+
+\subsection{生成随机密码} 
+编写一段代码，定义一个名为 generate\_password 的函数，该函数用于生成指定长度的随机密码。使用了 Python 的 random 和 string 模块来实现其功能。
+
+函数参数
+length: 一个整数，指定了生成的密码应该包含多少个字符。
+函数内部逻辑
+定义字符集：首先，通过组合 string.ascii\_letters（包含所有ASCII字母，大小写各26个），string.digits（包含所有10个数字），和 string.punctuation（包含所有ASCII标点符号），构建了一个包含所有可用字符的字符串 characters。这样，生成的密码可以包含字母、数字和标点符号，增强了密码的复杂性。
+生成密码：使用列表推导式和 random.choice() 函数，从 characters 字符串中随机选择 length 个字符，并将它们连接成一个字符串。这个字符串就是生成的随机密码。
+返回密码：函数最后返回这个生成的密码字符串。
+编写思路
+明确需求：首先明确需要生成一个随机密码，密码的长度应该是可配置的。
+选择字符集：为了增加密码的复杂度，选择了包含字母、数字和标点符号的字符集。
+生成随机序列：利用 Python 的 random 模块中的 choice() 函数，结合列表推导式，从字符集中随机选择指定数量的字符。
+返回结果：将生成的随机字符序列连接成一个字符串，并返回。
+运行结果
+当调用 generate\_password(12) 时，函数会生成一个长度为12的随机密码，并打印出来。 
+\begin{lstlisting}
+import random
+import string
+
+def generate_password(length):
+    characters = string.ascii_letters + string.digits + string.punctuation
+    password = ''.join(random.choice(characters) for i in range(length))
+    return password
+
+# 调用示例
+# print("生成的密码:", generate_password(12))
+运行结果：生成的密码:
+b3J$2#M8n@4%
+\end{lstlisting}
+
+\subsection{进行数组排序}
+代码需求：
+生成一串随机数组，使用快速排序进行排序
+代码思路：
+实现quicksort 函数，需要遵循快速排序算法的基本思想：选择一个基准值（pivot），然后将数组分为小于基准值的左部分、等于基准值的中间部分和大于基准值的右部分，之后递归地对左右两部分进行快速排序，最后将这三部分合并
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{16.png}
+  \caption{代码及运行结果}
+   \end{figure}  
+
+ 代码缺陷及修改：
+   使用arr.copy() 来生成原始数组 arr 的一个副本，并将其传递给 quicksort 函数。这样做是为了防止在排序过程中修改原始数组 arr。
+
+示例使用  
+\begin{lstlisting}
+    import random  
+    arr = [random.randint(0, 100) for _ in range(20)]  
+    print("原始数组:", arr)  
+    sorted_arr = quicksort(arr.copy()) 
+    # 使用 arr.copy() 来避免修改原始数组  
+    print("排序后的数组:", sorted_arr)  
+注意：此时 arr 仍然是原始数组，sorted_arr 是排序后的新数组
+
+\end{lstlisting}
+    
+
+
+\section{Python视觉应用}
+
+
+\subsection{环境配置}
+PIL（Python Imaging Library Python，图像处理类库）提供了通用的图像处理功能，以及大量有用的基本图像操作，比如图像缩放、裁剪、旋转、颜色转换等。
+
+通过网络查询发现，现在更常用PIL的更现代、更活跃的分支Pillow。Pillow是PIL的一个友好分支，提供了强大的图像处理能力，并修复了PIL中的一些bug，增加了许多新特性。
+
+我使用的是Python 3，需要使用pip3而不是pip来确保为Python 3安装Pillow。
+
+pip3 install Pillow
+from PIL import Image  这样调用PIL库
+
+\subsection{打开并转换图像格式}
+通过 save() 方法，PIL 可以将图像保存成多种格式的文件。下面的例子将图像文件，并转换成 JPEG 格式
+
+\begin{lstlisting}
+   # 打开图像
+    image = Image.open('example.png')
+    # 将图像模式从RGBA转换为RGB
+    image = image.convert('RGB')
+    # 'RGB' 是目标模式，表示图像将转换为红、绿、蓝三个通道的图像。
+    # RGBA 模式表示图像有红、绿、蓝和透明度四个通道。
+   # 尝试遍历一个名为 filelist 的列表，该列表包含要处理的图像文件的路径。对于每个文件，将其转换为 .jpg 格式
+\end{lstlisting}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{17.png}
+  \caption{代码}
+   \end{figure}  
+
+\subsection{获取图片信息}
+     获取图像信息
+    width, height = image.size
+    mode = image.mode
+    print(f"Width: {width}, Height: {height},  Mode: {mode}")
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.5\linewidth]{18.png}
+  \caption{运行结果}
+   \end{figure}  
+
+
+
+\subsection{创建缩略图}
+使用 PIL 可以很方便地创建图像的缩略图。thumbnail() 方法接受一个元组参数（该
+参数指定生成缩略图的大小），然后将图像转换成符合元组参数指定大小的缩略图。
+例如，创建最长边为 128 像素的缩略图，可以使用下列命令：
+pil\_im.thumbnail((128,128))
+
+
+\begin{verbatim}
+     # 生成缩略图
+    thumbnail_size = (100, 100)
+    image.thumbnail(thumbnail_size)
+    image.save('thumbnail_example.jpg')
+    print("缩略图已生成并保存为 thumbnail_example.jpg")
+  \end{verbatim}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{example.png}
+  \caption{example.png}
+   \end{figure}  
+
+   \begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{thumbnail_example.jpg}
+  \caption{缩略图}
+   \end{figure}  
+
+
+
+
+
+\subsection{裁剪、调整尺寸和旋转}
+要调整一幅图像的尺寸，我们可以调用 resize() 方法。该方法的参数是一个元组，
+用来指定新图像的大小
+要旋转一幅图像，可以使用逆时针方式表示旋转角度，然后调用 rotate() 方法
+
+\begin{verbatim}
+  # 裁剪图像
+    box = (100, 100, 400, 400)
+    cropped_image = image.crop(box)
+    cropped_image.show()
+
+    # 调整图像大小
+    new_size = (300, 300)
+    resized_image = image.resize(new_size)
+    resized_image.show()
+
+    # 旋转图像
+    rotated_image = image.rotate(45)
+    rotated_image.show()
+  \end{verbatim}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{19.png}
+  \caption{裁剪后的图片}
+   \end{figure}  
+   
+   \begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{20.png}
+  \caption{改变尺寸的图片}
+   \end{figure}  
+   
+   \begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{21.png}
+  \caption{旋转后的图片}
+   \end{figure}  
+   
+
+\subsection{绘制图像、点和线}
+尽管 Matplotlib 可以绘制出较好的条形图、饼状图、散点图等，但是对于大多数计
+算机视觉应用来说，仅仅需要用到几个绘图命令。最重要的是，我们想用点和线来
+表示一些事物，比如兴趣点、对应点以及检测出的物体。下面是用几个点和一条线
+绘制图像的例子
+
+ \begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{26.jpg}
+  \caption{绘制后的图片}
+   \end{figure}
+ 
+\begin{verbatim}
+# 绘制图形
+    draw = ImageDraw.Draw(image)
+    draw.rectangle([50, 50, 2500, 1450], outline="red", width=10)
+    image.show()
+\end{verbatim}
+
+
+\subsection{应用滤镜和转化为灰度图像}
+
+\begin{verbatim}
+  # 应用滤镜
+    # ImageFilter.BLUR是一个预定义的滤镜，用于模糊图像。
+    blurred_image = image.filter(ImageFilter.BLUR)
+    blurred_image.show()
+
+    # 转换为灰度图像
+    gray_image = image.convert('L')
+    gray_image.show()
+  \end{verbatim}
+  
+ \begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{22.png}
+  \caption{模糊后的图片}
+   \end{figure}  
+   
+    \begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{23.png}
+  \caption{灰度图像}
+   \end{figure}  
+   
+\subsection{图片拼接}
+
+\begin{verbatim}
+   # 生成第一张图片：左边是原图的左半部分，右边是灰度图片的右半部分
+    try:
+        combined_image1 = Image.new('RGB', (width, height))
+        left_half_1 = image.crop((0, 0, width // 2, height))
+        right_half_1 = gray_image.crop((width // 2, 0, width, height))
+        combined_image1.paste(left_half_1, (0, 0))
+        combined_image1.paste(right_half_1, (width // 2, 0))
+        combined_image1.save('combined_image1.jpg')
+        print("第一张图片已生成并保存为 combined_image1.jpg")
+
+        # 生成第二张图片：左边是灰度图片的左半部分，右边是原图的右半部分
+        combined_image2 = Image.new('RGB', (width, height))
+        left_half_2 = gray_image.crop((0, 0, width // 2, height))
+        right_half_2 = image.crop((width // 2, 0, width, height))
+        combined_image2.paste(left_half_2, (0, 0))
+        combined_image2.paste(right_half_2, (width // 2, 0))
+        combined_image2.save('combined_image2.jpg')
+        print("第二张图片已生成并保存为 combined_image2.jpg")
+  \end{verbatim}
+   
+ \begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{24.jpg}
+  \caption{拼接的图片1}
+   \end{figure}  
+   
+    \begin{figure}[H]
+  \centering
+    \includegraphics[width=0.9\linewidth]{25.jpg}
+  \caption{拼接的图片2}
+   \end{figure}  
+
+
+   \subsection{gif图生成}
+将之前的example图片与拼接后的两张图片做成gif图
+\begin{verbatim}
+        # 生成 GIF 动画
+        frames = [image, combined_image1, combined_image2]
+        frame_durations = [500, 500, 500]  # 每帧显示 500 毫秒
+        frames[0].save('animation.gif', save_all=True, append_images=frames[1:], duration=frame_durations, loop=0)
+        print("GIF 动画已生成并保存为 animation.gif")
+\end{verbatim}
+
+ \section{遇到的问题和学到的经验}
+
+\subsection{问题描述：}
+使用 pgrep、kill 命令及其选项（如 SIGTERM 和 SIGKILL）时，需要精确控制哪些进程应该被终止或暂停。
+  \subsection{学到的经验}
+精确查找：pgrep 命令提供了根据进程名或其他属性查找进程的能力，结合 -l 选项可以显示完整的命令行，有助于确认要操作的进程。
+温和终止：默认情况下，kill 命令发送 SIGTERM 信号，请求进程自行终止。这是一种更温和的终止方式，允许进程进行清理操作。
+强制终止：如果进程没有响应 SIGTERM，可以使用 kill -9 发送 SIGKILL 信号，强制终止进程。但这种方法不会给进程留下清理的机会。
+ \subsection{问题描述：}
+命令行环境使用不熟练：
+在使用 Ctrl-Z、fg、bg 和 jobs 命令管理进程时，可能会遇到一些困惑，比如如何有效地在后台运行长时间运行的进程，以及如何在需要时恢复它们。
+  \subsection{学到的经验}
+暂停与恢复：Ctrl-Z 是暂停当前前台进程的快速方法，而 fg 和 bg 命令则允许用户根据需要恢复进程在前台或后台运行。
+任务列表：jobs 命令提供了一个清晰的视图，显示了当前终端会话中所有暂停和后台运行的进程。
+后台运行：通过在命令末尾添加 \&，可以直接让命令在后台运行，这对于启动长时间运行的进程特别有用。
+别名命名：在设置别名时，应避免使用与现有命令或常用工具相同的名称，以防止冲突。
+替代方案：考虑使用更独特或更长的别名，如 cdc 或 cd\_to，以避免覆盖。
+备份与恢复：在更改重要配置文件（如 .bashrc 或 .bash\_profile）之前，最好备份原始文件，以便在需要时恢复。
+ \subsection{问题描述：}在尝试使用命令行安装Python库（如使用pip）时，经常遇到权限问题或路径错误，导致安装失败。
+ \subsection{学到的经验}
+  学会了使用sudo（在Linux/macOS上）或管理员命令提示符（在Windows上）来提升权限，以及使用虚拟环境（如venv或conda）来隔离和管理不同项目的依赖。
+
+ \subsection{问题描述：}Python基础语法混淆：在编写Python脚本时，经常混淆变量作用域、列表和元组的区别，以及循环和条件语句的嵌套。
+学到的经验：通过大量练习和阅读官方文档，加深了对Python基础语法的理解，学会了使用调试工具（如pdb）来追踪和解决问题。
+
+\subsection{问题描述：}
+视觉分析库的使用难题：
+在使用Matplotlib、Pandas或OpenCV等库进行图像处理和可视化时，遇到性能瓶颈或难以实现的特定效果。
+  \subsection{学到的经验}
+  学习了如何优化图像加载和处理过程，如使用适当的数据类型、减少不必要的计算以及利用并行处理。同时，也学会了查看官方文档和社区论坛，寻找解决特定问题的技巧和最佳实践。
+
+学到的经验总结
+持续学习：技术日新月异，保持对新技术和新方法的关注和学习是非常重要的。
+实践出真知：理论知识是基础，但只有通过实践才能真正掌握和应用。
+社区资源：充分利用官方文档、社区论坛和开源项目等资源，可以更快地解决问题并提升技能。
+耐心和毅力：面对问题和挑战时，保持耐心和毅力是成功的关键。
+
+ \section{代码链接}
+      请访问以下链接来查看我在Github上的相关练习、报告和代码：
+\url{https://github.com/boken319/git_push}
+我的在线Latex文件的网址：
+\url{https://cn.overleaf.com/read/ystjjrypyfnf#402b9a}
+
+\end{document}
